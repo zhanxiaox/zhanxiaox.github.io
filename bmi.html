@@ -8,19 +8,94 @@
     <title>BMI</title>
     <!-- 开发环境版本，包含了有帮助的命令行警告 -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        #app {
+            background-color: #fff;
+            width: 1000px;
+            min-height: 800px;
+            margin: 50px auto;
+            padding: 50px;
+        }
+    </style>
 </head>
 
 <body>
-    <div id="app">{{message}}</div>
+    <div id="app">
+
+        <div>
+            <h1>BMI</h1>
+            <input v-model="height" type="number" placeholder="身高(m)">m
+            <input v-model="weight" type="number" placeholder="体重(kg)">kg
+            <p>你的BMI:{{bmi}}</p>
+            <p>你的体重上限是:{{bmiMax}}kg</p>
+            <p>你的体重下限是:{{bmiMin}}kg</p>
+            <hr>
+            <a href="https://baike.baidu.com/item/%E8%BA%AB%E4%BD%93%E8%B4%A8%E9%87%8F%E6%8C%87%E6%95%B0/8706438?fromtitle=BMI"
+                target="blank">BMI(身体质量指数)
+                指数是什么?</a>
+        </div>
+
+    </div>
 </body>
 
 </html>
 <script>
 
-    var app2 = new Vue({
+    const app = new Vue({
+
         el: '#app',
+
         data: {
-            message: '页面加载于 ' + new Date().toLocaleString()
+            height: null,
+            weight: null,
+            bmi: null,
+            bmiMin: null,
+            bmiMax: null
+        },
+
+        methods: {
+
+            calculator: () => {
+
+                if (app.height != null && app.weight != null) {
+
+                    let height = parseFloat(app.height)
+                    let weight = parseFloat(app.weight)
+
+                    if (height > 3 || height < 1) {
+
+                        alert("你已超过人类的限制")
+
+                        app.height = null
+                        app.weight = null
+
+                        return
+                    }
+
+                    app.bmi = (weight / (height * height)).toFixed(1)
+                    app.bmiMax = (height * height * 25).toFixed(1)
+                    app.bmiMin = (height * height * 20).toFixed(1)
+                }
+            }
+        },
+
+        watch: {
+
+            height: (oldVal,newVal) => {
+
+                app.calculator()
+            },
+
+            weight: (oldVal,newVal) => {
+
+                app.calculator()
+            },
         }
     })
 
